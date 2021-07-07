@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class Turrent : MonoBehaviour
 {
+
+    [Header("Attributes")]
+    public float fireRate = 1f;
+    private float fireCountdown = 0f;
+
+
     public Transform target;
     public float range = 15f;
 
     public Transform fff;
 
+
+    [Header("Unity Setup Fields")]
     public string enemyTag = "Enemy";
 
+    public GameObject bulletPrefab;
+    public Transform firePoint;
     public Transform partToRotate;
     public float turnSpeed = 10f;
 
@@ -64,6 +74,7 @@ public class Turrent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if(target == null)
         {
             return;
@@ -101,6 +112,14 @@ public class Turrent : MonoBehaviour
         //Extra:
         //(line #6) 就是用來柔化這個轉向角的公式/API 永遠只取兩個角度的的一部分來達成.
 
+        if (fireCountdown <= 0f)
+        {
+            Shoot();
+            fireCountdown = 1f / fireRate;//1f/1f=1
+        }
+
+        fireCountdown -= Time.deltaTime;//0減掉每一秒(-1)
+
     }
 
     private void OnDrawGizmosSelected()
@@ -115,6 +134,19 @@ public class Turrent : MonoBehaviour
             Vector3 enemy = target.position;
             Gizmos.DrawLine(transform.position, enemy);//畫線對象為距離最進的對象
 
+        }
+
+    }
+
+    void Shoot()
+    {
+        //Debug.Log("Shoot");
+        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();
+
+        if (bullet != null)
+        {
+            bullet.seek(target);
         }
 
     }
