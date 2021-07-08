@@ -27,10 +27,10 @@ public class Bullet : MonoBehaviour
         }
 
         Vector3 dir = target.position - transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
+        float distanceThisFrame = speed * Time.deltaTime;//70*Time.Deltatime 的單位應該爲 秒 / 幀 ，意思變成每秒移動的距離為70f???
 
 
-        if(dir.magnitude <= distanceThisFrame)
+        if (dir.magnitude <= distanceThisFrame)//如果dir的座標距離小於每秒70f
         {
             HitTarget();
             return;
@@ -47,6 +47,6 @@ public class Bullet : MonoBehaviour
 
         Destroy(target.gameObject);
 
-        Debug.Log("We hit someting");
+        //Debug.Log("We hit someting");
     }
 }

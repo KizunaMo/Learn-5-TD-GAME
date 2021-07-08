@@ -13,7 +13,7 @@ public class Turrent : MonoBehaviour
     public Transform target;
     public float range = 15f;
 
-    public Transform fff;
+    public Transform enemy;
 
 
     [Header("Unity Setup Fields")]
