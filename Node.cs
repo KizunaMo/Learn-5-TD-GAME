@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour
 {
@@ -14,14 +15,24 @@ public class Node : MonoBehaviour
     private Renderer rend;
     private Color startColor;
 
+    BuildManager buildManager;
+
     private void Start()
     {
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
+
+        buildManager = BuildManager.instacnce;
     }
 
     private void OnMouseDown()//按下滑鼠按鍵時
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (buildManager.GetTurretToBuild() == null)
+            return;
+
         if (turret != null)//當不是空的時候，也就是上面有東西時
         {
             Debug.Log("Can't bulid there");
@@ -40,6 +51,11 @@ public class Node : MonoBehaviour
     private void OnMouseEnter()//記得在unity物件上添加collider或是rigibody來觸發事件，否則會沒有反應
                                //當滑鼠座標射線移進物件時
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (buildManager.GetTurretToBuild() == null)
+            return;
         rend.material.color = hoverColor;
     }
 
