@@ -6,7 +6,7 @@ public class BuildManager : MonoBehaviour
 {
 
     public static BuildManager instacnce;
-    private GameObject turretToBuild;
+    public  GameObject turretToBuild;
 
     private void Awake()
     {
@@ -29,12 +29,12 @@ public class BuildManager : MonoBehaviour
 
 
 
-    public GameObject GetTurretToBuild()
+    public GameObject GetTurretToBuild()//用來建立所選對象
     {
-        return turretToBuild;//返回turretBuild的值 (而這邊的turretBuild = StandardTurretPrfab)
+        return turretToBuild;//返回turretToBuild的值
     }
 
-    public void SetTurretToBuild(GameObject turret)
+    public void SetTurretToBuild(GameObject turret)//用來選擇所篹對象
     {
         turretToBuild = turret;
     }
