@@ -8,11 +8,11 @@ public class Bullet : MonoBehaviour
     
 
     public float speed = 70f;
-    public float explosionRadius = 0f;
+    public float explosionRadius = 3f;
 
     public GameObject bulletImpact;
 
-    public void seek(Transform _target)
+    public void seek(Transform _target)//Turret腳本中有引用到
     {
         target = _target;
     }
@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour
         }
 
         transform.Translate(dir.normalized * distanceThisFrame,Space.World);
-        transform.LookAt(target);//朝向
+        transform.LookAt(target);//面朝向target
 
     }
 
@@ -58,8 +58,6 @@ public class Bullet : MonoBehaviour
             Damage(target);
         }
 
-
-        
         Destroy(gameObject);
 
         //Debug.Log("We hit someting");
@@ -72,21 +70,25 @@ public class Bullet : MonoBehaviour
         {
             if(collider.tag == "Enemy")
             {
-                Damage(collider.transform);
+                Debug.Log("碰撞到tag為Enemy的collider");
+                Damage(collider.transform);//collider.tansform的值等於下方enemy.gameObject的位置
             }
         }
     }
 
     void Damage(Transform enemy)
     {
-        Destroy(enemy.gameObject);
+        Destroy(enemy.gameObject);//把值回傳給Explode方法裡面的collider.transfrom
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
+
     }
+
+
 
 
 

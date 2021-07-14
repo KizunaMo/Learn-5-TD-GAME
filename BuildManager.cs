@@ -6,7 +6,6 @@ public class BuildManager : MonoBehaviour
 {
 
     public static BuildManager instacnce;
-    public  GameObject turretToBuild;
 
     private void Awake()
     {
@@ -20,26 +19,36 @@ public class BuildManager : MonoBehaviour
     }
 
     public GameObject standardTurretPrefab;
-    public GameObject anotherTurretPrefab;
+    public GameObject missileLauncherPrefab;
 
-    //private void Start()
-    //{
-    //    turretToBuild = standardTurretPrefab;//放在unity上面的prefab，賦值進turretBuild；在一開始的時候，turretBulid = unity上面設定的prefab;
-    //}
+    private TurretBlueprint turretToBuild;
 
+    public bool CanBuild { get { return turretToBuild != null; } }
 
-
-    public GameObject GetTurretToBuild()//用來建立所選對象
+    public void BuildTurretOn(Node node)
     {
-        return turretToBuild;//返回turretToBuild的值
-    }
+        if(PlayerStats.money < turretToBuild.cost)
+        {
+            Debug.Log("不夠錢購買");
+            return;
+        }
 
-    public void SetTurretToBuild(GameObject turret)//用來選擇所篹對象
+        PlayerStats.money -= turretToBuild.cost;
+
+
+        GameObject turret = (GameObject) Instantiate(turretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
+        node.turret = turret;
+
+        Debug.Log("建立turret 花費" + PlayerStats.money);
+
+    }
+   
+
+ 
+    public void SelectTurretToBuild (TurretBlueprint turret)
     {
         turretToBuild = turret;
     }
-
-
 
 
 }
