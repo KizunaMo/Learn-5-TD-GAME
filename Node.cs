@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class Node : MonoBehaviour
 {
     public Color hoverColor;
+    public Color notEnoughMoneyColor;
+
     public Vector3 positionOffset;
 
     [Header (" Optional")]
@@ -55,7 +57,18 @@ public class Node : MonoBehaviour
 
         if (!buildManager.CanBuild)
             return;//沒有對象時直接return不動作(當有兩個if同時成立，且都有return，那會依照書寫順序執行return，即僅執行第一個if條件)
-        rend.material.color = hoverColor;
+
+        if (buildManager.HasMoney)
+        {
+            rend.material.color = hoverColor;
+        }
+        else
+        {
+            rend.material.color = notEnoughMoneyColor;
+        }
+
+
+        
     }
 
 
