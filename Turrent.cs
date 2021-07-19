@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class Turrent : MonoBehaviour
 {
+    public Transform target;
 
-    [Header("Attributes")]
+    [Header("General")]
+    public float range = 15f;
+
+    [Header("Use Bullets (default)")]
+    public GameObject bulletPrefab;
     public float fireRate = 1f;
     private float fireCountdown = 0f;
 
-
-    public Transform target;
-    public float range = 15f;
-
-    public Transform enemy;
+    [Header("Use Laser")]
+    public bool useLaser = false;
+    public LineRenderer lineRenderer;
 
 
     [Header("Unity Setup Fields")]
     public string enemyTag = "Enemy";
 
-    public GameObject bulletPrefab;
-    public Transform firePoint;
+
     public Transform partToRotate;
     public float turnSpeed = 10f;
+    public Transform firePoint;
+    
+   
 
     public bool enemyIn;
-
+    public Transform enemy;
 
     // Start is called before the first frame update
     void Start()
@@ -77,10 +82,40 @@ public class Turrent : MonoBehaviour
         
         if(target == null)
         {
+            if (useLaser)
+            {
+                if (lineRenderer.enabled)
+                    lineRenderer.enabled = false;
+            }
+
             return;
         }
 
-        //Target Lock On轉向
+        LockOnTarget();
+
+        if (useLaser)
+        {
+            Laser();
+        }
+        else
+        {
+            if (fireCountdown <= 0f)
+            {
+                Shoot();
+                fireCountdown = 1f / fireRate;//1f/1f=1
+            }
+
+            fireCountdown -= Time.deltaTime;//0減掉每一秒(-1)
+        }
+        
+       
+
+    }
+
+
+
+    void LockOnTarget()
+    {
         Vector3 dir = target.position - transform.position;//距離跟方向，前面放目標，後面放起點，有方向性(起點指向目標)
         Quaternion lookRotation = Quaternion.LookRotation(dir); //quaternion為四元數的應用，猜測是向前方轉向，而這前方的位置就是上一行的距離與方向
                                                                 //舉例Quaternion.LookRotation(Vector3 v); 註釋旋轉將物體的z軸正方向旋轉到正對目標位置的方向
@@ -89,8 +124,6 @@ public class Turrent : MonoBehaviour
                                                                                                                         //第三個引數Time.deltaTime * turnSpeed可以用來調整運動時間
 
         partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-
         //Quaternion舉例說明
         //但如果已經知道下一幀要到的地點(position)
         //可以這樣算角度.
@@ -111,31 +144,14 @@ public class Turrent : MonoBehaviour
 
         //Extra:
         //(line #6) 就是用來柔化這個轉向角的公式/API 永遠只取兩個角度的的一部分來達成.
-
-        if (fireCountdown <= 0f)
-        {
-            Shoot();
-            fireCountdown = 1f / fireRate;//1f/1f=1
-        }
-
-        fireCountdown -= Time.deltaTime;//0減掉每一秒(-1)
-
     }
 
-    private void OnDrawGizmosSelected()
+    void Laser()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
-
-
-
-        if (enemyIn && target != null)
-        {
-            Vector3 enemy = target.position;
-            Gizmos.DrawLine(transform.position, enemy);//畫線對象為距離最進的對象
-
-        }
-
+        if (!lineRenderer.enabled)
+            lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, firePoint.position);
+        lineRenderer.SetPosition(1, target.position);
     }
 
     void Shoot()
@@ -152,6 +168,22 @@ public class Turrent : MonoBehaviour
     }
 
 
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, range);
+
+
+
+        if (enemyIn && target != null)
+        {
+            Vector3 enemy = target.position;
+            Gizmos.DrawLine(transform.position, enemy);//畫線對象為距離最進的對象
+
+        }
+
+    }
 
 
 }
