@@ -5,6 +5,7 @@ using UnityEngine;
 public class Turrent : MonoBehaviour
 {
     public Transform target;
+    public Enemy targetEnemy;
 
     [Header("General")]
     public float range = 15f;
@@ -16,6 +17,10 @@ public class Turrent : MonoBehaviour
 
     [Header("Use Laser")]
     public bool useLaser = false;
+
+    public int damageOverTime = 30;
+    public float slowAmount = 0.5f;
+
     public LineRenderer lineRenderer;
 
     public ParticleSystem ImpactEffect;
@@ -27,7 +32,7 @@ public class Turrent : MonoBehaviour
 
 
     public Transform partToRotate;
-    public float turnSpeed = 10f;
+    public float turnSpeed = 30f;
     public Transform firePoint;
     
    
@@ -69,6 +74,7 @@ public class Turrent : MonoBehaviour
         if(nearestEnemy != null && shortestDistance <= range)//如果項目不是空的，而且距離小於設定的range
         {
             target = nearestEnemy.transform;//target的座標等於nearestEnemy
+            targetEnemy = nearestEnemy.GetComponent<Enemy>();
             enemyIn = true;
         }
         else
@@ -157,6 +163,10 @@ public class Turrent : MonoBehaviour
 
     void Laser()
     {
+        targetEnemy.TakeDamage(damageOverTime * Time.deltaTime);//damageOverTime * Time.deltaTime會傳出一個值給Enemy腳本中的TakeDamage(float amount)
+        targetEnemy.Slow(slowAmount);
+
+
         if (!lineRenderer.enabled)
         {
             lineRenderer.enabled = true;
