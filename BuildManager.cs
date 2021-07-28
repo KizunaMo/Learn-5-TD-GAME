@@ -23,6 +23,10 @@ public class BuildManager : MonoBehaviour
     public GameObject buildEffect;
 
     private TurretBlueprint turretToBuild;
+    public Node selectedNode;
+
+    public NodeUI nodeUI;
+
 
     public bool CanBuild { get { return turretToBuild != null; } }//this is called a property and it's called the property because we only allow it to actually get something ,
                                                                   //we only allow ourselves to get something from this variable ,
@@ -37,32 +41,38 @@ public class BuildManager : MonoBehaviour
     public bool HasMoney { get { return PlayerStats.money >= turretToBuild.cost; } } // >= return false; < return true;
 
 
-    public void BuildTurretOn(Node node)
+  
+   
+    public void SeletedNode(Node node)
     {
-        if(PlayerStats.money < turretToBuild.cost)
+        if(selectedNode == node)
         {
-            Debug.Log("不夠錢購買");
+            DeslecteNode();
             return;
         }
+        selectedNode = node;
+        turretToBuild = null;
 
-        PlayerStats.money -= turretToBuild.cost;
-
-
-        GameObject turret = (GameObject) Instantiate(turretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
-        node.turret = turret;
-
-        GameObject effect = (GameObject) Instantiate(buildEffect, node.GetBuildPosition() ,Quaternion.identity);
-        Destroy(effect, 5f);
-
-        Debug.Log("建立turret 花費" + PlayerStats.money);
-
+        nodeUI.SetTarget(node);
     }
-   
+
+    public void DeslecteNode()
+    {
+        selectedNode = null;
+        nodeUI.Hide();
+    }
 
  
     public void SelectTurretToBuild (TurretBlueprint turret)
     {
         turretToBuild = turret;
+
+        DeslecteNode();
+    }
+
+    public TurretBlueprint GetTurretToBuild()
+    {
+        return turretToBuild;
     }
 
 
