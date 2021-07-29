@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public bool CameraMovement = true;
+    
 
     [Header ("panSet")]
     public float panSpeed = 30f;
@@ -31,12 +31,7 @@ public class CameraController : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-            CameraMovement = !CameraMovement;
-        if (!CameraMovement)
-        {
-            return;
-        }
+    
         if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)//輸入W或是當滑鼠座標Y大於螢幕高度-設定值時
         {
             transform.Translate(Vector3.forward * panSpeed * Time.deltaTime,Space.World);//Vector3.forward (0f,0f,1f)

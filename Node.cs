@@ -39,7 +39,8 @@ public class Node : MonoBehaviour
 
     private void OnMouseDown()//按下滑鼠按鍵時
     {
-        if (EventSystem.current.IsPointerOverGameObject())//一個場景只能有一個EvnentSystem,current為返回當前的EventSystem；IsPointerOverGameObject檢查是否點擊在UI介面上
+        if (EventSystem.current.IsPointerOverGameObject())//如果在UI介面上不會穿透UI介面，觸發物件後面的物件
+            //一個場景只能有一個EvnentSystem,current為返回當前的EventSystem；IsPointerOverGameObject檢查是否點擊在UI介面上
             return;//意思是如果點在UI介面上就不執行動作直接return
 
 
@@ -107,7 +108,20 @@ public class Node : MonoBehaviour
 
     }
 
-        private void OnMouseEnter()//記得在unity物件上添加collider或是rigibody來觸發事件，否則會沒有反應
+    public void SellTurret()
+    {
+        PlayerStats.money += turretBlueprint.GetSellAmount();
+
+        //Spawn a coll effect
+        GameObject effect = (GameObject)Instantiate(buildManager.sellEffect, GetBuildPosition(), Quaternion.identity);
+        Destroy(effect, 5f);
+
+        Destroy(turret);
+        turretBlueprint = null; 
+
+    }
+
+    private void OnMouseEnter()//記得在unity物件上添加collider或是rigibody來觸發事件，否則會沒有反應
                                //當滑鼠座標射線移進物件時
     {
         if (EventSystem.current.IsPointerOverGameObject())

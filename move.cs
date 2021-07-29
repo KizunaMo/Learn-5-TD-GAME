@@ -35,7 +35,7 @@ public class move : MonoBehaviour
     {
         YVelocity = Input.GetAxisRaw("Vertical");
         XVelocity = Input.GetAxisRaw("Horizontal"); 
-        if (movement = true)
+        if (movement == true)
         {
             rb.velocity = new Vector3(XVelocity * speed * Time.fixedDeltaTime ,0,YVelocity * speed * Time.fixedDeltaTime);
             
