@@ -20,34 +20,45 @@ public class CameraController : MonoBehaviour
     public float screenMinX = 0f;
     public float screenMaxX = 35f;
 
+    [Header("MousePosition")]
+    public Vector3 mousePosition;
+    public  bool Scrolled = false;
 
+
+  
     // Update is called once per frame
     void Update()
     {
+        MouseScroll();
+        mousePosition =Camera.main.ScreenToWorldPoint(Input.mousePosition);;
+
         if (GameManager.gameIsOver)
         {
             this.enabled = false;
             return;
         }
 
+        if (Scrolled)
+        {
+            if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)//輸入W或是當滑鼠座標Y大於螢幕高度-設定值時
+            {
+                transform.Translate(Vector3.forward * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
+            }
+            if (Input.GetKey("s") || Input.mousePosition.y <= panBorderThickness)
+            {
+                transform.Translate(Vector3.back * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
+            }
+            if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness)
+            {
+                transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
+            }
+            if (Input.GetKey("a") || Input.mousePosition.x <= panBorderThickness)
+            {
+                transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
+            }
 
-    
-        if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)//輸入W或是當滑鼠座標Y大於螢幕高度-設定值時
-        {
-            transform.Translate(Vector3.forward * panSpeed * Time.deltaTime,Space.World);//Vector3.forward (0f,0f,1f)
         }
-        if (Input.GetKey("s") || Input.mousePosition.y <= panBorderThickness)
-        {
-            transform.Translate(Vector3.back * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
-        }
-        if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness)
-        {
-            transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
-        }
-        if (Input.GetKey("a") || Input.mousePosition.x <= panBorderThickness)
-        {
-            transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);//Vector3.forward (0f,0f,1f)
-        }
+        
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");//定義一個數值當推移滑鼠滾輪時
 
@@ -58,8 +69,21 @@ public class CameraController : MonoBehaviour
         pos.z = Mathf.Clamp(pos.z, screenMinZ, screenMaxZ);
 
         transform.position = pos;//再把pos的值賦值給transform.position  ((前面都做好計算後再丟回給transform))
-
-
     }
+
+    public void MouseScroll()
+    {
+        Vector3 pos = transform.position;
+        if (pos.y<70f)
+        {
+            Scrolled = true;
+        }
+        else
+        {
+            Scrolled = false;
+            transform.position = new Vector3(16.3f, 72.4f, -21.2f);
+        }
+    }
+
 }
  

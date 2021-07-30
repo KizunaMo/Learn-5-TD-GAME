@@ -8,6 +8,10 @@ public class GameOver : MonoBehaviour
 {
     public Text roindsText;
 
+    public SceneFader sceneFader;
+
+    public string menuScenceName = "MainMenu";
+
 
     private void OnEnable()
     {
@@ -16,12 +20,13 @@ public class GameOver : MonoBehaviour
 
     public void Retry()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        sceneFader.FadeTo(SceneManager.GetActiveScene().name);
     }
 
 
     public void Menu()
     {
+        sceneFader.FadeTo(menuScenceName);
         Debug.Log("Go to the Menu");
     }
 
