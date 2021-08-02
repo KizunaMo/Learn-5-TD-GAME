@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public Transform enemyPrefab;
+    public static int enemyAlive = 0;
+
+    public Wave[] waves;
+    
     public float timeBetweenWaves = 5.5f;
     private float countdown = 5f;
     public int waveIndex = 0;
@@ -14,11 +17,17 @@ public class WaveSpawner : MonoBehaviour
 
     private void Update()
     {
+        if(enemyAlive > 0)
+        {
+            return;
+        }
+
         if (countdown <= 0f)//如果減到0
         {
             StartCoroutine(SpawnWave());//調用IEnumertor的函數要用StartCoroutine
             countdown = timeBetweenWaves;//countdown會等於timeBetweenWave(5S)，
                                          //跳出IF，接著在執行countdown -= Time.deltaTime;//countdown每秒減一
+            return;
         }
         countdown -= Time.deltaTime;//countdown每秒減一
 
@@ -29,19 +38,29 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        waveIndex ++;
-        PlayerStats.rounds++;
-        //Debug.Log("WaveIsComing");
-        for (int i = 0; i < waveIndex; i++)
-        {
-            SpawnEnemy();
-            yield return new WaitForSeconds(0.5f);// 等待0.5秒，然后继续从此处开始，常用于做定时器。
-        }
         
+        PlayerStats.rounds++;
+
+        Wave wave = waves[waveIndex];
+
+        for (int i = 0; i < wave.count; i++)
+        {
+            SpawnEnemy(wave.enemy);
+            yield return new WaitForSeconds(1f/wave.rate);// 等待0.5秒，然后继续从此处开始，常用于做定时器。
+        }
+        waveIndex++;
+
+        if(waveIndex == waves.Length)
+        {
+            Debug.Log("Level Won!");
+            this.enabled = false;
+        }
+
     }
-    void SpawnEnemy()
+    void SpawnEnemy(GameObject enemy)
     {
-        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+        enemyAlive++;
     }
 
 
