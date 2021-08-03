@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public static int enemyAlive = 0;
+    public static int enemyAlive;
 
     public Wave[] waves;
     
@@ -15,11 +15,18 @@ public class WaveSpawner : MonoBehaviour
     public Transform spawnPoint;
     public Text wavecountDownTimer;
 
+    public  GameManager gameManager;
+
     private void Update()
     {
         if(enemyAlive > 0)
         {
             return;
+        }
+        if (waveIndex == waves.Length )
+        {
+            gameManager.WinLevel();
+            this.enabled = false;
         }
 
         if (countdown <= 0f)//如果減到0
@@ -43,24 +50,21 @@ public class WaveSpawner : MonoBehaviour
 
         Wave wave = waves[waveIndex];
 
+        enemyAlive = wave.count;
+
         for (int i = 0; i < wave.count; i++)
         {
             SpawnEnemy(wave.enemy);
-            yield return new WaitForSeconds(1f/wave.rate);// 等待0.5秒，然后继续从此处开始，常用于做定时器。
+            yield return new WaitForSeconds(wave.waittingTime);// 等待0.5秒，然后继续从此处开始，常用于做定时器。
         }
         waveIndex++;
 
-        if(waveIndex == waves.Length)
-        {
-            Debug.Log("Level Won!");
-            this.enabled = false;
-        }
+     
 
     }
     void SpawnEnemy(GameObject enemy)
     {
         Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
-        enemyAlive++;
     }
 
 

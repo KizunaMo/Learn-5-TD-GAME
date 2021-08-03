@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
 
     public SceneFader sceneFader;
 
+
     public void Play()
     {
         Debug.Log("Play");
@@ -19,6 +20,7 @@ public class MainMenu : MonoBehaviour
     public void Quit()
     {
         Debug.Log("Quit");
+        PlayerPrefs.DeleteAll();
         Application.Quit();
     }
 
