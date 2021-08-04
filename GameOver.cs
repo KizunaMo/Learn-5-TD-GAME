@@ -6,17 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
 {
-    public Text roindsText;
+    
 
     public SceneFader sceneFader;
 
     public string menuScenceName = "MainMenu";
 
 
-    private void OnEnable()
-    {
-        roindsText.text = PlayerStats.rounds.ToString();
-    }
+ 
 
     public void Retry()
     {
